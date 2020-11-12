@@ -1,0 +1,16 @@
+.header {
+    grid-area: h;
+    padding: 20px;
+    position: relative;
+}
+
+.header img {
+    position: absolute;
+    width: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.login_block {
+    float: right;
+}
