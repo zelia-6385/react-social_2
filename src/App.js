@@ -26,51 +26,51 @@ const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsCo
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
 
 class App extends React.Component {
-    catchAllUnhandleErrors = (promiseRejectionEvent) => {
-        alert('some error occured');
-    };
+  catchAllUnhandleErrors = (promiseRejectionEvent) => {
+    alert('some error occured');
+  };
 
-    componentDidMount() {
-        this.props.initializeApp();
-        window.addEventListener('unhandledrejection', this.catchAllUnhandleErrors);
-    }
+  componentDidMount() {
+    this.props.initializeApp();
+    window.addEventListener('unhandledrejection', this.catchAllUnhandleErrors);
+  }
 
-    componentWillUnmount() {
-        window.removeEventListener('unhandledrejection', this.catchAllUnhandleErrors);
-    }
+  componentWillUnmount() {
+    window.removeEventListener('unhandledrejection', this.catchAllUnhandleErrors);
+  }
 
-    render() {
-        if (!this.props.initialized) {
-            return <Preloader />;
-        }
-        return (
-            <div className="app-wrapper">
-                <HeaderContainer />
-                <Navbar />
-                <div className="app-wrapper-content">
-                    <Switch>
-                        <Route exact path="/" render={() => <Redirect to={'/profile'} />} />
-                        <Route path="/dialogs" render={withSuspense(DialogsContainer)} />
-                        <Route path="/profile/:userId?" render={withSuspense(ProfileContainer)} />
-                        <Route path="/users" render={() => <UsersContainer />} />
-                        <Route path="/login" render={() => <LoginPage />} />
-                        <Route path="*" render={() => <div>404 NOT FOUND</div>} />
-                    </Switch>
-                </div>
-            </div>
-        );
+  render() {
+    if (!this.props.initialized) {
+      return <Preloader />;
     }
+    return (
+      <div className="app-wrapper">
+        <HeaderContainer />
+        <Navbar />
+        <div className="app-wrapper-content">
+          <Switch>
+            <Route exact path="/" render={() => <Redirect to={'/profile'} />} />
+            <Route path="/dialogs" render={withSuspense(DialogsContainer)} />
+            <Route path="/profile/:userId?" render={withSuspense(ProfileContainer)} />
+            <Route path="/users" render={() => <UsersContainer pageTitle={'Самураи'} />} />
+            <Route path="/login" render={() => <LoginPage />} />
+            <Route path="*" render={() => <div>404 NOT FOUND</div>} />
+          </Switch>
+        </div>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => ({
-    initialized: state.app.initialized,
+  initialized: state.app.initialized,
 });
 
 let AppContainer = compose(
-    withRouter,
-    connect(mapStateToProps, {
-        initializeApp,
-    }),
+  withRouter,
+  connect(mapStateToProps, {
+    initializeApp,
+  }),
 )(App);
 
 // export default compose(
@@ -91,13 +91,13 @@ let AppContainer = compose(
 // };
 
 let SamuraiJSApp = (props) => {
-    return (
-        <BrowserRouter>
-            <Provider store={store}>
-                <AppContainer />
-            </Provider>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    </BrowserRouter>
+  );
 };
 
 export default SamuraiJSApp;
