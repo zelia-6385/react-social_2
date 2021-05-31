@@ -1,9 +1,11 @@
 // import React from 'react';
-import { addPost } from '../../../redux/profile-reducer';
+import { actions } from '../../../redux/profile-reducer';
 import { connect } from 'react-redux';
 
 import MyPosts from './MyPosts';
 // import StoreContext from '../../../StoreContext';
+
+const { addPost } = actions;
 
 // const MyPostsContainer = (props) => {
 //     return (
@@ -34,10 +36,10 @@ import MyPosts from './MyPosts';
 // };
 
 let mapStateToProps = (state) => {
-    return {
-        posts: state.profilePage.posts,
-        newPostText: state.profilePage.newPostText,
-    };
+  return {
+    posts: state.profilePage.posts,
+    newPostText: state.profilePage.newPostText,
+  };
 };
 
 // let mapDispatchToProps = (dispatch) => {
@@ -54,7 +56,7 @@ let mapStateToProps = (state) => {
 // };
 
 const MyPostsContainer = connect(mapStateToProps, {
-    addPost,
+  addPost,
 })(MyPosts);
 
 export default MyPostsContainer;
