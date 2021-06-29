@@ -1,5 +1,3 @@
-// import { createSelector } from 'reselect';
-
 import { AppStateType } from './redux-store';
 
 export const getUsers = (state: AppStateType) => {
@@ -25,7 +23,3 @@ export const getIsFetching = (state: AppStateType) => {
 export const getFollowingInPropgress = (state: AppStateType) => {
   return state.usersPage.followingInProgress;
 };
-
-// export const getUsersSuper = createSelector(getUsers, getIsFetching, (users, isFetching) => {
-//     return users.filter((u) => true);
-// });
