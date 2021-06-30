@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
-import { follow, unfollow, requestUsers } from '../../redux/users-reducer';
+import { follow, unfollow, requestUsers, FilterType } from '../../redux/users-reducer';
 import React from 'react';
 import Users from './Users';
 import Preloader from '../common/Preloader/Preloader';
-// import { withAuthRedirect } from '../../hoc/withAuthRedirect';
 import { compose } from 'redux';
 import {
   getPageSize,
@@ -12,6 +11,7 @@ import {
   getCurrentPage,
   getIsFetching,
   getFollowingInPropgress,
+  getUsersFilter,
 } from '../../redux/user-selectors';
 import { UserType } from '../../types/types';
 import { AppStateType } from '../../redux/redux-store';
@@ -23,12 +23,13 @@ type MapStatePropsType = {
   totalUsersCount: number;
   users: Array<UserType>;
   followingInProgress: Array<number>;
+  filter: FilterType;
 };
 
 type MapDispatchPropsType = {
   follow: (userId: number) => void;
   unfollow: (userId: number) => void;
-  requestUsers: (currentPage: number, pageSize: number) => void;
+  requestUsers: (currentPage: number, pageSize: number, filter: FilterType) => void;
 };
 
 type OwnPropsType = {
@@ -39,13 +40,19 @@ type PropsType = MapStatePropsType & MapDispatchPropsType & OwnPropsType;
 
 class UsersContainer extends React.Component<PropsType> {
   componentDidMount() {
-    const { currentPage, pageSize } = this.props;
-    this.props.requestUsers(currentPage, pageSize);
+    const { currentPage, pageSize, filter } = this.props;
+    this.props.requestUsers(currentPage, pageSize, filter);
   }
 
   onPageChanged = (pageNumber: number) => {
+    const { pageSize, filter } = this.props;
+    this.props.requestUsers(pageNumber, pageSize, filter);
+  };
+
+  onFilterChanged = (filter: FilterType) => {
     const { pageSize } = this.props;
-    this.props.requestUsers(pageNumber, pageSize);
+
+    this.props.requestUsers(1, pageSize, filter);
   };
 
   render() {
@@ -58,6 +65,7 @@ class UsersContainer extends React.Component<PropsType> {
           pageSize={this.props.pageSize}
           currentPage={this.props.currentPage}
           onPageChanged={this.onPageChanged}
+          onFilterChanged={this.onFilterChanged}
           users={this.props.users}
           follow={this.props.follow}
           unfollow={this.props.unfollow}
@@ -68,18 +76,6 @@ class UsersContainer extends React.Component<PropsType> {
   }
 }
 
-// let mapStateToProps = (state) => {
-//     return {
-//         users: state.usersPage.users,
-//         pageSize: state.usersPage.pageSize,
-//         totalUsersCount: state.usersPage.totalUsersCount,
-//         currentPage: state.usersPage.currentPage,
-//         isFetching: state.usersPage.isFetching,
-//         followingInProgress: state.usersPage.followingInProgress,
-//         isAuth: state.auth.isAuth,
-//     };
-// };
-
 let mapStateToProps = (state: AppStateType): MapStatePropsType => {
   return {
     users: getUsers(state),
@@ -88,34 +84,9 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => {
     currentPage: getCurrentPage(state),
     isFetching: getIsFetching(state),
     followingInProgress: getFollowingInPropgress(state),
+    filter: getUsersFilter(state),
   };
 };
-
-// let mapDispatchToProps = (dispatch) => {
-//     return {
-//         follow: (userId) => {
-//             dispatch(followAC(userId));
-//         },
-
-//         unfollow: (userId) => {
-//             dispatch(unfollowAC(userId));
-//         },
-
-//         setUsers: (users) => {
-//             dispatch(setUsersAC(users));
-//         },
-
-//         setCurrentPage: (currentPage) => {
-//             dispatch(setCurrentPageAC(currentPage));
-//         },
-//         setTotalUsersCount: (totalCount) => {
-//             dispatch(setTotalUsersCountAC(totalCount));
-//         },
-//         toggleIsFetching: (isFetching) => {
-//             dispatch(toggleIsFetchingAC(isFetching));
-//         },
-//     };
-// };
 
 export default compose(
   connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(mapStateToProps, {
@@ -123,35 +94,4 @@ export default compose(
     unfollow,
     requestUsers,
   }),
-  // withAuthRedirect,
 )(UsersContainer);
-
-// props.setUsers([
-//     {
-//         id: 1,
-//         photoUrl:
-//             'https://upload.wikimedia.org/wikipedia/commons/8/88/Dmitry_Nagiev_2017_4.jpg',
-//         followed: false,
-//         fullName: 'Dmitry',
-//         status: 'I am a boss',
-//         location: { city: 'Minsk', country: 'Belarus' },
-//     },
-//     {
-//         id: 2,
-//         photoUrl:
-//             'https://upload.wikimedia.org/wikipedia/commons/8/88/Dmitry_Nagiev_2017_4.jpg',
-//         followed: true,
-//         fullName: 'Yury',
-//         status: 'I am a boss too',
-//         location: { city: 'Moscow', country: 'Russia' },
-//     },
-//     {
-//         id: 3,
-//         photoUrl:
-//             'https://upload.wikimedia.org/wikipedia/commons/8/88/Dmitry_Nagiev_2017_4.jpg',
-//         followed: false,
-//         fullName: 'Sasha',
-//         status: 'I am a boss too',
-//         location: { city: 'Kiev', country: 'Ukrain' },
-//     },
-// ]);
