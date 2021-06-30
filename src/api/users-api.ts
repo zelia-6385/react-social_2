@@ -12,7 +12,9 @@ export const usersAPI = {
       .then((response) => response.data) as Promise<ApiResponseType>;
   },
   follow(userId: number) {
-    return instance.post<ApiResponseType>(`follow/${userId}`).then((response) => response.data);
+    return instance
+      .post<ApiResponseType>(`follow/${userId}`)
+      .then((response) => response.data) as Promise<ApiResponseType>;
   },
   // getProfile(userId: number) {
   //   console.warn('obsolete method. Please use profileAPI object');

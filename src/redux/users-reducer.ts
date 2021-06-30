@@ -3,6 +3,7 @@ import { InferActionsTypes, BaseThunkType } from './redux-store';
 import { UserType } from './../types/types';
 import { updateObjectInArray } from '../utils/object-helpers';
 import { Dispatch } from 'react';
+import { ApiResponseType } from '../api/api';
 
 let initialState = {
   users: [] as Array<UserType>,
@@ -134,7 +135,7 @@ export const requestUsers =
 const _followunfollowFlow = async (
   dispatch: DispatchType,
   userId: number,
-  apiMethod: any,
+  apiMethod: (userId: number) => Promise<ApiResponseType>,
   actionCreator: (userId: number) => ActionsTypes,
 ) => {
   dispatch(actions.toggleFollowingProgress(true, userId));
@@ -150,14 +151,14 @@ export const follow =
   (userId: number): ThunkType =>
   async (dispatch) => {
     let apiMethod = usersAPI.follow.bind(usersAPI);
-    _followunfollowFlow(dispatch, userId, apiMethod, actions.followSuccess);
+    await _followunfollowFlow(dispatch, userId, apiMethod, actions.followSuccess);
   };
 
 export const unfollow =
   (userId: number): ThunkType =>
   async (dispatch) => {
     let apiMethod = usersAPI.unfollow.bind(usersAPI);
-    _followunfollowFlow(dispatch, userId, apiMethod, actions.unfollowSuccess);
+    await _followunfollowFlow(dispatch, userId, apiMethod, actions.unfollowSuccess);
   };
 
 export default usersReducer;
