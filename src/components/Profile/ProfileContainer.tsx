@@ -33,6 +33,7 @@ class PropfileContainer extends React.Component<PropsType> {
     let userId: number | null = +this.props.match.params.userId;
 
     if (!userId) {
+      // если не зашли на страницу конкретного пользователя, то взять id авторизованного пользователя
       userId = this.props.authorisedUserId;
 
       if (!userId) {
