@@ -72,7 +72,7 @@ const Users: React.FC = () => {
 
     // этим методом отправляем данные в адресную строку
     history.push({
-      pathname: 'users',
+      pathname: 'developers',
       // search: `?term=${filter.term}&friend=${filter.friend}&page=${currentPage}`,
       search: queryString.stringify(query),
     });
